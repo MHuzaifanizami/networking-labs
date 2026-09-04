@@ -222,4 +222,92 @@ The `.pkt` file is included in this folder.
 
 
 
+# Lab 04 — IP Addressing
+
+## Objective
+
+Configure IPv4 addresses and subnet masks on PCs and verify connectivity between devices on the same network.
+
+## Topology
+
+* 1 × Cisco 2960 Switch
+* 3 × PCs
+* All PCs connected to the same switch
+
+## IP Addressing
+
+```text
+Network: 192.168.10.0/24
+Subnet Mask: 255.255.255.0
+```
+
+| Device | IP Address    | Subnet Mask   |
+| ------ | ------------- | ------------- |
+| PC1    | 192.168.10.10 | 255.255.255.0 |
+| PC2    | 192.168.10.20 | 255.255.255.0 |
+| PC3    | 192.168.10.30 | 255.255.255.0 |
+
+Default Gateway was not configured because all PCs were on the same local network and no router was required.
+
+## Connectivity Test
+
+Used the `ping` command to verify communication between PCs.
+
+From PC1:
+
+```text
+ping 192.168.10.20
+ping 192.168.10.30
+```
+
+**Result:** Successful ✅
+
+## Different Network Test
+
+PC3's IP address was temporarily changed to:
+
+```text
+192.168.20.30/24
+```
+
+A ping was then performed from PC1:
+
+```text
+ping 192.168.20.30
+```
+
+**Result:** Failed ❌
+
+The communication failed because PC1 and PC3 were on different IP networks and no router was configured.
+
+## Connectivity Restored
+
+PC3's IP address was changed back to:
+
+```text
+192.168.10.30/24
+```
+
+The ping test was performed again.
+
+**Result:** Successful ✅
+
+## Skills Learned
+
+* IPv4 address configuration
+* Subnet mask configuration
+* Identifying network addresses
+* Same-network communication
+* Understanding different IP networks
+* Using `ipconfig`
+* Using the `ping` command
+* Basic connectivity troubleshooting
+
+## Packet Tracer File
+
+The `.pkt` file is included in this folder.
+
+
+
+
 
