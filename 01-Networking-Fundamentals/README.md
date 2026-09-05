@@ -308,6 +308,77 @@ The ping test was performed again.
 The `.pkt` file is included in this folder.
 
 
+# Lab 05 — Static IP Configuration
+
+## Objective
+
+Manually configure static IPv4 addresses on multiple PCs and verify network connectivity using the `ping` command.
+
+## Topology
+
+* 1 × Cisco 2960 Switch
+* 4 × PCs
+* All PCs connected to the same switch
+
+## IP Addressing
+
+```text
+Network: 192.168.10.0/24
+Subnet Mask: 255.255.255.0
+```
+
+| Device | IP Address    | Subnet Mask   |
+| ------ | ------------- | ------------- |
+| PC1    | 192.168.10.10 | 255.255.255.0 |
+| PC2    | 192.168.10.20 | 255.255.255.0 |
+| PC3    | 192.168.10.30 | 255.255.255.0 |
+| PC4    | 192.168.10.40 | 255.255.255.0 |
+
+All IP addresses were configured manually using the **Static** option in the PC's IP Configuration settings.
+
+No default gateway was configured because all PCs were on the same local network and no router was required.
+
+## IP Verification
+
+The `ipconfig` command was used to verify the configured IP address and subnet mask.
+
+```text
+ipconfig
+```
+
+## Connectivity Test
+
+Ping was used to verify communication between the PCs.
+
+Example:
+
+```text
+ping 192.168.10.20
+ping 192.168.10.30
+ping 192.168.10.40
+```
+
+**Result:** Successful ✅
+
+## IP Conflict Test
+
+An already-used IP address was temporarily assigned to another PC to demonstrate an IP address conflict.
+
+Each device should have a unique IP address to avoid communication problems.
+
+## Skills Learned
+
+* Static IPv4 configuration
+* Manual IP address assignment
+* Subnet mask configuration
+* IP address verification using `ipconfig`
+* Connectivity testing using `ping`
+* Understanding IP address conflicts
+* Basic network troubleshooting
+
+## Packet Tracer File
+
+The `.pkt` file is included in this folder.
 
 
 
