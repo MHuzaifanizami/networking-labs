@@ -381,4 +381,148 @@ Each device should have a unique IP address to avoid communication problems.
 The `.pkt` file is included in this folder.
 
 
+# Lab 06 — Default Gateway
+
+## Objective
+
+Configure default gateways on PCs and verify communication between different IP networks through a router.
+
+## Topology
+
+* 1 × Cisco Router
+* 2 × Cisco 2960 Switches
+* 4 × PCs
+* 2 PCs connected to each switch
+
+```text
+PC1 ─┐
+     ├── SW1 ── R1 ── SW2 ──┬── PC3
+PC2 ─┘                       └── PC4
+```
+
+## IP Addressing
+
+### Network 1 — SW1 Side
+
+```text
+Network: 192.168.10.0/24
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.10.1
+```
+
+| Device  | IP Address    | Default Gateway |
+| ------- | ------------- | --------------- |
+| PC1     | 192.168.10.10 | 192.168.10.1    |
+| PC2     | 192.168.10.20 | 192.168.10.1    |
+| R1 G0/0 | 192.168.10.1  | —               |
+
+### Network 2 — SW2 Side
+
+```text
+Network: 192.168.20.0/24
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.20.1
+```
+
+| Device  | IP Address    | Default Gateway |
+| ------- | ------------- | --------------- |
+| PC3     | 192.168.20.10 | 192.168.20.1    |
+| PC4     | 192.168.20.20 | 192.168.20.1    |
+| R1 G0/1 | 192.168.20.1  | —               |
+
+## Router Configuration
+
+```text
+enable
+configure terminal
+hostname R1
+
+interface g0/0
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+exit
+
+interface g0/1
+ip address 192.168.20.1 255.255.255.0
+no shutdown
+exit
+
+end
+```
+
+## Connectivity Test
+
+First, test communication within the same network.
+
+From PC1:
+
+```text
+ping 192.168.10.20
+```
+
+**Result:** Successful ✅
+
+Then test communication between different networks:
+
+From PC1:
+
+```text
+ping 192.168.20.10
+ping 192.168.20.20
+```
+
+**Result:** Successful ✅
+
+The router forwards traffic between the `192.168.10.0/24` and `192.168.20.0/24` networks using the configured default gateways.
+
+## Default Gateway Test
+
+The default gateway on PC1 was temporarily removed.
+
+PC1 was then used to ping a PC on the other network:
+
+```text
+ping 192.168.20.10
+```
+
+**Result:** Failed ❌
+
+After restoring the default gateway:
+
+```text
+192.168.10.1
+```
+
+the ping became successful again.
+
+## Key Concept
+
+```text
+PC1/PC2 → 192.168.10.0/24
+        → Gateway: 192.168.10.1
+
+PC3/PC4 → 192.168.20.0/24
+        → Gateway: 192.168.20.1
+
+Different Network
+        ↓
+Default Gateway
+        ↓
+Router
+        ↓
+Destination Network
+```
+
+## Skills Learned
+
+* Default Gateway
+* IPv4 addressing
+* Router interface configuration
+* Communication between different networks
+* `ping` command
+* Basic network troubleshooting
+
+## Packet Tracer File
+
+The `.pkt` file is included in this folder.
 
