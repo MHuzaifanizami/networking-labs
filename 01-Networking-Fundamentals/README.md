@@ -526,3 +526,129 @@ Destination Network
 
 The `.pkt` file is included in this folder.
 
+# Lab 07 — Subnetting
+
+## Objective
+
+Divide a /24 network into smaller /26 subnets and configure PCs with IP addresses from different subnets.
+
+## Topology
+
+* 1 × Cisco 2960 Switch
+* 4 × PCs
+* All PCs connected to the same switch
+
+```text
+             SW1
+          /   |   |   \
+        PC1  PC2  PC3  PC4
+```
+
+## Network
+
+Original network:
+
+```text
+Network: 192.168.10.0/24
+Subnet Mask: 255.255.255.0
+```
+
+The `/24` network was divided into four `/26` subnets.
+
+```text
+Subnet Mask: 255.255.255.192
+```
+
+## Subnetting Table
+
+| Subnet   | Network Address   | Usable Host Range               | Broadcast      |
+| -------- | ----------------- | ------------------------------- | -------------- |
+| Subnet 1 | 192.168.10.0/26   | 192.168.10.1 - 192.168.10.62    | 192.168.10.63  |
+| Subnet 2 | 192.168.10.64/26  | 192.168.10.65 - 192.168.10.126  | 192.168.10.127 |
+| Subnet 3 | 192.168.10.128/26 | 192.168.10.129 - 192.168.10.190 | 192.168.10.191 |
+| Subnet 4 | 192.168.10.192/26 | 192.168.10.193 - 192.168.10.254 | 192.168.10.255 |
+
+Each `/26` subnet provides:
+
+```text
+64 total addresses
+62 usable host addresses
+```
+
+## IP Addressing
+
+| Device | IP Address     | Subnet Mask     |
+| ------ | -------------- | --------------- |
+| PC1    | 192.168.10.10  | 255.255.255.192 |
+| PC2    | 192.168.10.70  | 255.255.255.192 |
+| PC3    | 192.168.10.130 | 255.255.255.192 |
+| PC4    | 192.168.10.194 | 255.255.255.192 |
+
+No default gateway was configured because no router was used in this lab.
+
+## Connectivity Test
+
+PCs in the same subnet can communicate directly.
+
+Example:
+
+```text
+ping 192.168.10.10
+```
+
+Communication between different subnets was tested:
+
+```text
+PC1 → PC2
+PC1 → PC3
+PC1 → PC4
+```
+
+**Result:** Failed ❌
+
+The PCs belong to different subnets and no router or Layer-3 device was configured to route traffic between them.
+
+## Subnetting Calculation
+
+```text
+/24 → /26
+
+Borrowed Bits = 2
+
+Number of Subnets = 2² = 4
+
+Host Bits = 6
+
+Usable Hosts = 2⁶ - 2 = 62
+```
+
+The subnet increment is:
+
+```text
+256 - 192 = 64
+```
+
+Therefore, the subnet network addresses are:
+
+```text
+192.168.10.0
+192.168.10.64
+192.168.10.128
+192.168.10.192
+```
+
+## Skills Learned
+
+* IPv4 subnetting
+* Subnet mask calculation
+* Network and broadcast addresses
+* Usable host range
+* CIDR notation
+* Dividing a /24 network into /26 subnets
+* Understanding communication between different subnets
+* Basic network troubleshooting
+
+## Packet Tracer File
+
+The `.pkt` file is included in this folder.
+
