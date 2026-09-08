@@ -652,3 +652,151 @@ Therefore, the subnet network addresses are:
 
 The `.pkt` file is included in this folder.
 
+# Lab 08 — DHCP Basic
+
+## Objective
+
+Configure a Cisco router as a DHCP server and automatically assign IPv4 addresses and network settings to connected PCs.
+
+## Topology
+
+* 1 × Cisco Router
+* 1 × Cisco 2960 Switch
+* 4 × PCs
+
+```text
+             R1
+              |
+             SW1
+        /     |     |     \
+      PC1    PC2   PC3    PC4
+```
+
+## Network Configuration
+
+```text
+Network: 192.168.10.0/24
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.10.1
+```
+
+Router interface:
+
+```text
+R1 G0/0: 192.168.10.1/24
+```
+
+## DHCP Configuration
+
+The router was configured as a DHCP server.
+
+```text
+enable
+configure terminal
+
+hostname R1
+
+interface g0/0
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+exit
+
+ip dhcp excluded-address 192.168.10.1 192.168.10.9
+
+ip dhcp pool LAN-POOL
+network 192.168.10.0 255.255.255.0
+default-router 192.168.10.1
+dns-server 8.8.8.8
+exit
+
+end
+```
+
+The excluded addresses were reserved for network devices and were not assigned by DHCP.
+
+## PC Configuration
+
+All PCs were configured to obtain their network settings automatically.
+
+**PC → Desktop → IP Configuration → DHCP**
+
+Example automatically assigned addresses:
+
+| Device | IP Address    | Subnet Mask   | Default Gateway |
+| ------ | ------------- | ------------- | --------------- |
+| PC1    | 192.168.10.10 | 255.255.255.0 | 192.168.10.1    |
+| PC2    | 192.168.10.11 | 255.255.255.0 | 192.168.10.1    |
+| PC3    | 192.168.10.12 | 255.255.255.0 | 192.168.10.1    |
+| PC4    | 192.168.10.13 | 255.255.255.0 | 192.168.10.1    |
+
+The exact IP assignment order may vary.
+
+## IP Verification
+
+The `ipconfig` command was used to verify the automatically assigned network settings.
+
+```text
+ipconfig
+```
+
+## DHCP Verification
+
+The following commands were used on the router:
+
+```text
+show ip dhcp binding
+show ip dhcp pool
+```
+
+These commands were used to verify the DHCP pool and the IP addresses leased to the PCs.
+
+## Connectivity Test
+
+The default gateway was tested from a PC:
+
+```text
+ping 192.168.10.1
+```
+
+Communication between PCs was also tested using `ping`.
+
+Example:
+
+```text
+ping 192.168.10.11
+```
+
+**Result:** Successful ✅
+
+## DHCP DORA Process
+
+DHCP uses the following four-step process:
+
+```text
+Discover
+   ↓
+Offer
+   ↓
+Request
+   ↓
+Acknowledgment
+```
+
+This process allows a client to obtain its IP configuration automatically.
+
+## Skills Learned
+
+* DHCP
+* Dynamic IPv4 address assignment
+* DHCP pool configuration
+* Default gateway assignment
+* DNS configuration
+* DHCP verification commands
+* `ipconfig`
+* `ping`
+* DHCP DORA process
+
+## Packet Tracer File
+
+The `.pkt` file is included in this folder.
+
