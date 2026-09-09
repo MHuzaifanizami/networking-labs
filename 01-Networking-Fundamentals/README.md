@@ -800,3 +800,130 @@ This process allows a client to obtain its IP configuration automatically.
 
 The `.pkt` file is included in this folder.
 
+
+
+
+# Lab 09 — DNS Basic
+
+## Objective
+
+Configure a DNS server and verify hostname-to-IP address resolution in a basic network.
+
+## Topology
+
+* 1 × Cisco Router
+* 1 × Cisco 2960 Switch
+* 2 × PCs
+* 1 × DNS Server
+
+```text id="c4o2qa"
+PC1 ─┐
+PC2 ─┼── SW1 ─── R1
+DNS ─┘
+```
+
+## IP Addressing
+
+| Device     | IP Address     | Subnet Mask   | Default Gateway | DNS Server     |
+| ---------- | -------------- | ------------- | --------------- | -------------- |
+| R1 G0/0    | 192.168.10.1   | 255.255.255.0 | —               | —              |
+| PC1        | 192.168.10.10  | 255.255.255.0 | 192.168.10.1    | 192.168.10.100 |
+| PC2        | 192.168.10.20  | 255.255.255.0 | 192.168.10.1    | 192.168.10.100 |
+| DNS Server | 192.168.10.100 | 255.255.255.0 | 192.168.10.1    | 192.168.10.100 |
+
+## Router Configuration
+
+```text
+enable
+configure terminal
+
+hostname R1
+
+interface g0/0
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+exit
+
+end
+```
+
+## DNS Server Configuration
+
+The DNS service was enabled on the server.
+
+```text
+DNS Service: ON
+```
+
+An A record was created:
+
+```text
+Name:     www.lab.local
+Type:     A Record
+Address:  192.168.10.100
+```
+
+The DNS record maps the hostname to the server's IPv4 address:
+
+```text
+www.lab.local → 192.168.10.100
+```
+
+## PC Configuration
+
+The PCs were configured with the DNS server address:
+
+```text
+DNS Server: 192.168.10.100
+```
+
+## Connectivity Test
+
+First, the DNS server's IP address was tested:
+
+```text
+ping 192.168.10.100
+```
+
+**Result:** Successful ✅
+
+Then hostname resolution was tested:
+
+```text
+ping www.lab.local
+```
+
+**Result:** Successful ✅
+
+The hostname was successfully resolved to the DNS server's IP address.
+
+## DNS Resolution
+
+```text
+PC
+ ↓
+www.lab.local
+ ↓
+DNS Server
+ ↓
+192.168.10.100
+ ↓
+Destination
+```
+
+## Skills Learned
+
+* Domain Name System (DNS)
+* DNS server configuration
+* A record configuration
+* Hostname-to-IP resolution
+* IPv4 addressing
+* DNS client configuration
+* `ping` and connectivity testing
+* Basic DNS troubleshooting
+
+## Packet Tracer File
+
+The `.pkt` file is included in this folder.
+
+
