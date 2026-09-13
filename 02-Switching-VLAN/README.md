@@ -466,3 +466,190 @@ VLAN 10 ──X── VLAN 20
 
 The `.pkt` file is included in this folder.
 
+
+# Lab 04 — Trunking
+
+## Objective
+
+Configure a trunk link between two Cisco 2960 switches and carry traffic from multiple VLANs over a single physical connection.
+
+## Topology
+
+* 2 × Cisco 2960 Switches
+* 4 × PCs
+* One trunk link between the switches
+
+```text
+PC1 ── Fa0/1                 Fa0/1 ── PC3
+       SW1 Fa0/24 ─────── Fa0/24 SW2
+PC2 ── Fa0/2                 Fa0/2 ── PC4
+```
+
+## VLAN Configuration
+
+| VLAN ID | VLAN Name |
+| ------- | --------- |
+| VLAN 10 | SALES     |
+| VLAN 20 | HR        |
+
+Both switches were configured with the same VLANs.
+
+## IP Addressing
+
+| Device | IP Address    | VLAN    |
+| ------ | ------------- | ------- |
+| PC1    | 192.168.10.10 | VLAN 10 |
+| PC2    | 192.168.20.10 | VLAN 20 |
+| PC3    | 192.168.10.20 | VLAN 10 |
+| PC4    | 192.168.20.20 | VLAN 20 |
+
+Subnet mask:
+
+```text
+255.255.255.0
+```
+
+No default gateway was configured because no router was used.
+
+## VLAN Creation
+
+```text
+enable
+configure terminal
+
+vlan 10
+name SALES
+exit
+
+vlan 20
+name HR
+exit
+```
+
+The VLAN configuration was performed on both switches.
+
+## Access Port Configuration
+
+### SW1
+
+```text
+interface fa0/1
+switchport mode access
+switchport access vlan 10
+exit
+
+interface fa0/2
+switchport mode access
+switchport access vlan 20
+exit
+```
+
+### SW2
+
+```text
+interface fa0/1
+switchport mode access
+switchport access vlan 10
+exit
+
+interface fa0/2
+switchport mode access
+switchport access vlan 20
+exit
+```
+
+## Trunk Port Configuration
+
+### SW1
+
+```text
+interface fa0/24
+switchport mode trunk
+no shutdown
+exit
+```
+
+### SW2
+
+```text
+interface fa0/24
+switchport mode trunk
+no shutdown
+exit
+```
+
+## Verification
+
+The trunk link was verified using:
+
+```text
+show interfaces trunk
+```
+
+VLAN membership was checked using:
+
+```text
+show vlan brief
+```
+
+Interface status was checked using:
+
+```text
+show interfaces status
+```
+
+## Connectivity Test
+
+### Same VLAN Communication
+
+PC1 pinged PC3:
+
+```text
+ping 192.168.10.20
+```
+
+PC2 pinged PC4:
+
+```text
+ping 192.168.20.20
+```
+
+**Result:** Successful ✅
+
+The trunk carried traffic for VLAN 10 and VLAN 20 between the switches.
+
+### Different VLAN Communication
+
+PC1 pinged PC2:
+
+```text
+ping 192.168.20.10
+```
+
+**Result:** Failed ❌
+
+Different VLANs require a router or Layer 3 switch for communication.
+
+## Key Concepts
+
+* Access port carries traffic for one VLAN.
+* Trunk port carries traffic for multiple VLANs.
+* VLANs must exist on both switches.
+* Trunk links are commonly used between switches.
+* Different VLANs require Layer 3 routing to communicate.
+
+## Skills Learned
+
+* Trunk configuration
+* Access port configuration
+* VLAN creation
+* VLAN traffic between switches
+* `show interfaces trunk`
+* `show vlan brief`
+* Basic VLAN troubleshooting
+* Difference between access and trunk ports
+
+## Packet Tracer File
+
+The `.pkt` file is included in this folder.
+
