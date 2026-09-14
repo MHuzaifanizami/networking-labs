@@ -750,7 +750,7 @@ The ping should be successful because VLAN 10 is carried across the trunk.
 * PC ports are normally configured as access ports.
 * Native VLAN and trunking are related but are not the same thing.
 
-## Packet Tracer File
+## Packet Tracer File +++++++++
 
 `05-native-vlan.pkt`
 
