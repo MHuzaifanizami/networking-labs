@@ -653,3 +653,104 @@ Different VLANs require a router or Layer 3 switch for communication.
 
 The `.pkt` file is included in this folder.
 
+
+
+
+# Lab 05 — Native VLAN
+
+## Objective
+
+Configure a native VLAN on an 802.1Q trunk link between two Cisco switches and verify the native VLAN configuration.
+
+## Topology
+
+* 2 × Cisco 2960 Switches
+* 2 × PCs
+* 1 × Trunk Link
+
+```text
+PC1 ── SW1 Fa0/1
+        |
+      Fa0/24
+        ||
+      Fa0/24
+        |
+       SW2 ── PC2 Fa0/1
+```
+
+## VLAN Configuration
+
+| VLAN | Name   | Purpose     |
+| ---- | ------ | ----------- |
+| 10   | SALES  | User VLAN   |
+| 20   | HR     | User VLAN   |
+| 99   | NATIVE | Native VLAN |
+
+## IP Addressing
+
+| Device | IP Address    | VLAN | Subnet Mask   |
+| ------ | ------------- | ---- | ------------- |
+| PC1    | 192.168.10.10 | 10   | 255.255.255.0 |
+| PC2    | 192.168.10.20 | 10   | 255.255.255.0 |
+
+No default gateway is required for this basic same-subnet lab.
+
+## Configuration
+
+### Access Port
+
+PC ports were configured as access ports in VLAN 10:
+
+```text
+interface fa0/1
+switchport mode access
+switchport access vlan 10
+no shutdown
+```
+
+### Trunk Port
+
+Fa0/24 was configured as a trunk on both switches:
+
+```text
+interface fa0/24
+switchport mode trunk
+switchport trunk native vlan 99
+no shutdown
+```
+
+## Verification
+
+The following commands were used to verify the configuration:
+
+```text
+show vlan brief
+show interfaces trunk
+show interfaces fa0/24 switchport
+```
+
+The trunk should show **VLAN 99 as the Native VLAN**.
+
+## Connectivity Test
+
+PC1 and PC2 were placed in VLAN 10 and tested using:
+
+```text
+ping 192.168.10.20
+```
+
+The ping should be successful because VLAN 10 is carried across the trunk.
+
+## Key Concepts Learned
+
+* Native VLAN carries untagged traffic on an 802.1Q trunk.
+* VLAN 99 was configured as the native VLAN.
+* Native VLAN configuration must match on both ends of the trunk.
+* Trunk ports can carry multiple VLANs.
+* PC ports are normally configured as access ports.
+* Native VLAN and trunking are related but are not the same thing.
+
+## Packet Tracer File
+
+`05-native-vlan.pkt`
+
