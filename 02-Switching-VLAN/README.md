@@ -754,3 +754,104 @@ The ping should be successful because VLAN 10 is carried across the trunk.
 
 `05-native-vlan.pkt`
 
+
+
+
+
+
+# Lab 06 — Inter-VLAN Routing
+
+## Objective
+
+Configure inter-VLAN routing using a router-on-a-stick setup and enable communication between two different VLANs.
+
+## Topology
+
+* 1 × Cisco 2960 Switch
+* 1 × Router
+* 2 × PCs
+
+```text
+PC0 ── Fa0/1
+          |
+        SW1 Fa0/24 ───── R1 G0/0
+          |
+PC1 ── Fa0/2
+```
+
+## VLAN Configuration
+
+| VLAN | Name  | Purpose     |
+| ---- | ----- | ----------- |
+| 10   | SALES | PC0 network |
+| 20   | HR    | PC1 network |
+
+## IP Addressing
+
+| Device     | VLAN | IP Address    | Default Gateway |
+| ---------- | ---- | ------------- | --------------- |
+| PC0        | 10   | 192.168.10.10 | 192.168.10.1    |
+| PC1        | 20   | 192.168.20.10 | 192.168.20.1    |
+| R1 G0/0.10 | 10   | 192.168.10.1  | —               |
+| R1 G0/0.20 | 20   | 192.168.20.1  | —               |
+
+Subnet mask:
+
+```text
+255.255.255.0
+```
+
+## Configuration Summary
+
+### Switch
+
+* Created VLAN 10 and VLAN 20.
+* Assigned Fa0/1 to VLAN 10.
+* Assigned Fa0/2 to VLAN 20.
+* Configured Fa0/24 as a trunk port.
+
+### Router
+
+Created two subinterfaces:
+
+```text
+G0/0.10 → VLAN 10 → 192.168.10.1
+G0/0.20 → VLAN 20 → 192.168.20.1
+```
+
+The subinterfaces were configured using `encapsulation dot1Q`.
+
+## Verification Commands
+
+```text
+show vlan brief
+show interfaces trunk
+show ip interface brief
+show running-config
+```
+
+## Connectivity Test
+
+The following tests were performed:
+
+```text
+ping 192.168.10.1
+ping 192.168.20.1
+ping 192.168.20.10
+```
+
+The PCs successfully communicated through the router between VLAN 10 and VLAN 20.
+
+## Key Concepts Learned
+
+* VLANs separate networks into different broadcast domains.
+* Access ports connect end devices to a specific VLAN.
+* Trunk ports carry multiple VLANs.
+* Router subinterfaces provide gateways for different VLANs.
+* Inter-VLAN routing enables communication between separate VLANs.
+* Each VLAN requires a correct default gateway.
+
+## Packet Tracer File
+
+`06-inter-vlan-routing.pkt`
+
