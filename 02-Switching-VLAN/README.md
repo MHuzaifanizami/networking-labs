@@ -855,3 +855,151 @@ The PCs successfully communicated through the router between VLAN 10 and VLAN 20
 
 `06-inter-vlan-routing.pkt`
 
+
+
+# Lab 07 — Layer 3 Switch Inter-VLAN Routing
+
+## Objective
+
+Configure a Cisco Layer 3 switch to perform inter-VLAN routing using Switch Virtual Interfaces (SVIs).
+
+## Topology
+
+* 1 × Cisco 3560-24PS Layer 3 Switch
+* 2 × PCs
+
+```text
+             SW1 (3560)
+             Layer 3 Switch
+              /       \
+          Fa0/1       Fa0/2
+            |           |
+           PC1         PC2
+         VLAN 10     VLAN 20
+```
+
+## VLAN Configuration
+
+| VLAN | Name  | Network         |
+| ---- | ----- | --------------- |
+| 10   | SALES | 192.168.10.0/24 |
+| 20   | HR    | 192.168.20.0/24 |
+
+## IP Addressing
+
+| Device  | VLAN | IP Address    | Default Gateway |
+| ------- | ---: | ------------- | --------------- |
+| PC1     |   10 | 192.168.10.10 | 192.168.10.1    |
+| PC2     |   20 | 192.168.20.10 | 192.168.20.1    |
+| SW1 SVI |   10 | 192.168.10.1  | —               |
+| SW1 SVI |   20 | 192.168.20.1  | —               |
+
+## Configuration
+
+### Create VLANs
+
+```text
+vlan 10
+name SALES
+exit
+
+vlan 20
+name HR
+exit
+```
+
+### Assign Access Ports
+
+```text
+interface fa0/1
+switchport mode access
+switchport access vlan 10
+no shutdown
+exit
+
+interface fa0/2
+switchport mode access
+switchport access vlan 20
+no shutdown
+exit
+```
+
+### Configure SVIs
+
+```text
+interface vlan 10
+ip address 192.168.10.1 255.255.255.0
+no shutdown
+exit
+
+interface vlan 20
+ip address 192.168.20.1 255.255.255.0
+no shutdown
+exit
+```
+
+### Enable Layer 3 Routing
+
+```text
+ip routing
+```
+
+### Save Configuration
+
+```text
+copy running-config startup-config
+```
+
+## Verification
+
+Check VLANs:
+
+```text
+show vlan brief
+```
+
+Check SVI status:
+
+```text
+show ip interface brief
+```
+
+Check routing table:
+
+```text
+show ip route
+```
+
+## Connectivity Test
+
+From PC1:
+
+```text
+ping 192.168.10.1
+ping 192.168.20.10
+```
+
+From PC2:
+
+```text
+ping 192.168.20.1
+ping 192.168.10.10
+```
+
+Successful cross-VLAN pings confirm that the Layer 3 switch is routing traffic between VLAN 10 and VLAN 20.
+
+## Skills Learned
+
+* Layer 3 switch configuration
+* VLAN creation
+* Access port configuration
+* SVI configuration
+* Inter-VLAN routing
+* `ip routing`
+* Routing table verification
+* Connectivity testing with ping
+
+## Packet Tracer File
+
+`08-layer3-switch-inter-vlan.pkt`
+
