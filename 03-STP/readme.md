@@ -176,3 +176,144 @@ Therefore, SW2 becomes the Root Bridge.
 ## Packet Tracer File
 
 `02-stp-root-bridge.pkt`
+
+
+
+
+
+
+
+
+# Lab 03 — STP Root Port
+
+## Objective
+
+To understand how STP selects a Root Port on non-root switches and observe how STP recalculates the best path when a link fails.
+
+## Topology
+
+```text
+              SW1
+          ROOT BRIDGE
+          /         \
+       Fa0/1       Fa0/2
+        /             \
+     Fa0/1           Fa0/2
+       SW2 ----------- SW3
+              Fa0/2
+              Fa0/1
+```
+
+### Devices
+
+* 3 × Cisco 2960 Switches
+* No PCs required
+
+## Switch Connections
+
+| Switch | Port  | Connected To | Port  |
+| ------ | ----- | ------------ | ----- |
+| SW1    | Fa0/1 | SW2          | Fa0/1 |
+| SW1    | Fa0/2 | SW3          | Fa0/2 |
+| SW2    | Fa0/2 | SW3          | Fa0/1 |
+
+## Root Bridge Configuration
+
+SW1 was configured as the Root Bridge:
+
+```text
+enable
+configure terminal
+spanning-tree vlan 1 root primary
+end
+copy running-config startup-config
+```
+
+## Root Port
+
+A **Root Port** is the port on a non-root switch that provides the best path toward the Root Bridge.
+
+The Root Bridge itself does not have a Root Port.
+
+STP primarily selects the path with the lowest Root Path Cost.
+
+## Verification
+
+Use the following commands:
+
+```text
+show spanning-tree vlan 1
+show spanning-tree root
+show spanning-tree summary
+```
+
+To check a specific interface:
+
+```text
+show spanning-tree interface fa0/1
+```
+
+In the STP output, the port with the role:
+
+```text
+Root
+```
+
+is the Root Port.
+
+## Example
+
+With SW1 as the Root Bridge:
+
+```text
+SW1 → Root Bridge
+
+SW2 → Fa0/1 = Root Port
+SW3 → Fa0/2 = Root Port
+```
+
+The direct links toward SW1 normally provide the lowest-cost path.
+
+## Link Failure Experiment
+
+Disconnect the direct SW1–SW2 link.
+
+Before failure:
+
+```text
+SW2 Fa0/1 → Root Port
+```
+
+After the link failure, STP can recalculate the topology and use the alternate path:
+
+```text
+SW2 → SW3 → SW1
+```
+
+The Root Port on SW2 can then move to the port connected toward SW3.
+
+Verify the change with:
+
+```text
+show spanning-tree vlan 1
+```
+
+## Important STP Terms
+
+* **Root Bridge:** The central/reference switch selected by STP.
+* **Root Port:** Best path toward the Root Bridge on a non-root switch.
+* **Designated Port:** Forwarding port selected for a network segment.
+* **Alternate Port:** Redundant path that can be placed into a blocking state.
+
+## Skills Learned
+
+* Understanding STP Root Ports
+* Identifying Root Ports using STP commands
+* Understanding Root Path Cost
+* Understanding alternate paths
+* Observing STP convergence after link failure
+* Verifying STP topology changes
+
+## Packet Tracer File
+
+`03-stp-root-port.pkt`
