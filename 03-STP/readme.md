@@ -317,3 +317,115 @@ show spanning-tree vlan 1
 ## Packet Tracer File
 
 `03-stp-root-port.pkt`
+
+
+# Lab 04 — STP Port States
+
+## Objective
+
+To understand the different STP port states and observe how Spanning Tree Protocol manages switch ports to prevent Layer 2 loops.
+
+## Topology
+
+```text
+             SW1
+          ROOT BRIDGE
+           /       \
+          /         \
+        SW2---------SW3
+```
+
+### Devices
+
+* 3 × Cisco 2960 Switches
+* No PCs required
+
+## Switch Connections
+
+| Switch | Port  | Connected To | Port  |
+| ------ | ----- | ------------ | ----- |
+| SW1    | Fa0/1 | SW2          | Fa0/1 |
+| SW1    | Fa0/2 | SW3          | Fa0/2 |
+| SW2    | Fa0/2 | SW3          | Fa0/1 |
+
+## STP Configuration
+
+SW1 was configured as the Root Bridge.
+
+```text
+enable
+configure terminal
+spanning-tree vlan 1 root primary
+end
+copy running-config startup-config
+```
+
+## STP Port States
+
+Traditional STP (802.1D) uses five port states:
+
+| State      | Description                                                            |
+| ---------- | ---------------------------------------------------------------------- |
+| Blocking   | Prevents user data forwarding to avoid loops.                          |
+| Listening  | Processes BPDUs but does not learn MAC addresses or forward user data. |
+| Learning   | Learns MAC addresses but does not forward user data.                   |
+| Forwarding | Learns MAC addresses and forwards user data.                           |
+| Disabled   | Port does not participate in STP.                                      |
+
+## STP State Transition
+
+When a port transitions from Blocking to Forwarding in traditional STP, it normally follows this sequence:
+
+```text
+Blocking
+   |
+   v
+Listening
+   |
+   v
+Learning
+   |
+   v
+Forwarding
+```
+
+The Disabled state is separate from this transition sequence.
+
+## Verification Commands
+
+```text
+show spanning-tree
+show spanning-tree vlan 1
+show spanning-tree root
+show spanning-tree interface fa0/1
+show interfaces status
+```
+
+## Experiments
+
+1. Configured SW1 as the Root Bridge.
+2. Identified Root Ports, Designated Ports, and Alternate Ports.
+3. Observed Forwarding and Blocking states.
+4. Disconnected a link to observe STP topology changes.
+5. Used `shutdown` and `no shutdown` to test port behavior.
+6. Used Packet Tracer Simulation Mode to observe STP events.
+
+## Key Observations
+
+* STP uses port states to prevent Layer 2 loops.
+* Blocking ports prevent redundant paths from forwarding user data.
+* Forwarding ports can send and receive user traffic.
+* Learning ports build the MAC address table.
+* Link failures can trigger STP recalculation and change port states.
+
+## Skills Learned
+
+* Understanding STP port states
+* Identifying Root, Designated, and Alternate Ports
+* Understanding STP convergence
+* Observing topology changes
+* Using Cisco IOS commands to verify STP
+
+## Packet Tracer File
+
+`04-stp-port-states.pkt`
