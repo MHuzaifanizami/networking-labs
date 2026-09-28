@@ -429,3 +429,111 @@ show interfaces status
 ## Packet Tracer File
 
 `04-stp-port-states.pkt`
+
+
+
+
+# Lab 05 — Rapid Spanning Tree Protocol (RSTP)
+
+## Objective
+
+To configure and understand Rapid Spanning Tree Protocol (RSTP), identify port roles and states, and observe faster network recovery after a link failure.
+
+## Topology
+
+```text
+              SW1
+          ROOT BRIDGE
+           /       \
+          /         \
+        SW2---------SW3
+```
+
+### Devices
+
+* 3 × Cisco 2960 Switches
+* No PCs required
+
+## Switch Connections
+
+| Switch | Port  | Connected To | Port  |
+| ------ | ----- | ------------ | ----- |
+| SW1    | Fa0/1 | SW2          | Fa0/1 |
+| SW1    | Fa0/2 | SW3          | Fa0/2 |
+| SW2    | Fa0/2 | SW3          | Fa0/1 |
+
+## RSTP Configuration
+
+Rapid-PVST was enabled on all three switches.
+
+```text
+enable
+configure terminal
+spanning-tree mode rapid-pvst
+end
+copy running-config startup-config
+```
+
+SW1 was configured as the Root Bridge:
+
+```text
+enable
+configure terminal
+spanning-tree vlan 1 root primary
+end
+copy running-config startup-config
+```
+
+## RSTP Port States
+
+RSTP uses three port states:
+
+| State      | Description                                          |
+| ---------- | ---------------------------------------------------- |
+| Discarding | Does not forward user data or learn MAC addresses.   |
+| Learning   | Learns MAC addresses but does not forward user data. |
+| Forwarding | Forwards user data and learns MAC addresses.         |
+
+## RSTP Port Roles
+
+* **Root Port:** Provides the best path toward the Root Bridge.
+* **Designated Port:** Forwards traffic on a network segment.
+* **Alternate Port:** Provides an alternative path toward the Root Bridge.
+* **Backup Port:** Provides a backup connection to the same network segment.
+
+## Verification Commands
+
+```text
+show spanning-tree vlan 1
+show spanning-tree summary
+show spanning-tree root
+```
+
+## Experiments
+
+1. Enabled Rapid-PVST on all three switches.
+2. Configured SW1 as the Root Bridge.
+3. Verified RSTP port roles and states.
+4. Identified Root, Designated, and Alternate Ports.
+5. Disconnected a link to observe topology changes.
+6. Observed how RSTP restores connectivity using an alternate path.
+
+## Key Observations
+
+* RSTP prevents Layer 2 switching loops.
+* RSTP uses three port states: Discarding, Learning, and Forwarding.
+* Alternate Ports provide backup paths.
+* RSTP can restore connectivity faster than traditional STP after a link failure.
+
+## Skills Learned
+
+* Configuring Rapid-PVST
+* Understanding RSTP port states
+* Identifying RSTP port roles
+* Understanding alternate paths
+* Observing network recovery after link failure
+* Verifying RSTP using Cisco IOS commands
+
+## Packet Tracer File
+
+`05-rstp.pkt`
