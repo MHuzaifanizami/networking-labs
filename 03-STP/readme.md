@@ -537,3 +537,119 @@ show spanning-tree root
 ## Packet Tracer File
 
 `05-rstp.pkt`
+
+
+
+
+# Lab 06 — STP Load Balancing
+
+## Objective
+
+To configure STP load balancing by assigning different Root Bridges to multiple VLANs and observing how STP selects different forwarding paths.
+
+## Topology
+
+```text
+              SW1
+             /   \
+            /     \
+           /       \
+         SW2-------SW3
+         /           \
+       PC1            PC3
+       PC2            PC4
+```
+
+### Devices
+
+* 3 × Cisco 2960 Switches
+* 4 × PCs
+
+## Switch Connections
+
+| Switch | Port   | Connected To | Port   |
+| ------ | ------ | ------------ | ------ |
+| SW1    | Fa0/23 | SW2          | Fa0/23 |
+| SW1    | Fa0/24 | SW3          | Fa0/23 |
+| SW2    | Fa0/24 | SW3          | Fa0/24 |
+
+## VLAN Configuration
+
+| VLAN ID | VLAN Name | Root Bridge |
+| ------- | --------- | ----------- |
+| 10      | SALES     | SW1         |
+| 20      | HR        | SW2         |
+
+Both VLANs were created on all three switches.
+
+## IP Addressing
+
+| PC  | VLAN | IP Address    | Subnet Mask   |
+| --- | ---- | ------------- | ------------- |
+| PC1 | 10   | 192.168.10.10 | 255.255.255.0 |
+| PC2 | 20   | 192.168.20.10 | 255.255.255.0 |
+| PC3 | 10   | 192.168.10.20 | 255.255.255.0 |
+| PC4 | 20   | 192.168.20.20 | 255.255.255.0 |
+
+## STP Configuration
+
+SW1 was configured as the Root Bridge for VLAN 10.
+
+```text
+spanning-tree vlan 10 root primary
+```
+
+SW2 was configured as the Root Bridge for VLAN 20.
+
+```text
+spanning-tree vlan 20 root primary
+```
+
+Trunk links were configured between the switches to carry traffic for both VLANs.
+
+## Verification Commands
+
+```text
+show spanning-tree vlan 10
+show spanning-tree vlan 20
+show spanning-tree summary
+show interfaces trunk
+show vlan brief
+```
+
+## Connectivity Tests
+
+VLAN 10 connectivity:
+
+```text
+ping 192.168.10.20
+```
+
+VLAN 20 connectivity:
+
+```text
+ping 192.168.20.20
+```
+
+Both tests were used to verify connectivity between PCs in the same VLAN.
+
+## Key Observations
+
+* Different VLANs can have different Root Bridges.
+* Each VLAN has its own spanning-tree topology.
+* STP may select different forwarding paths for different VLANs.
+* Redundant links help provide backup paths.
+* Different Root Bridges can help distribute VLAN traffic across network links.
+
+## Skills Learned
+
+* Understanding STP load balancing
+* Configuring multiple VLANs
+* Configuring different Root Bridges
+* Understanding per-VLAN spanning-tree instances
+* Verifying STP port roles and states
+* Testing VLAN connectivity
+
+## Packet Tracer File
+
+`06-stp-load-balancing.pkt`
