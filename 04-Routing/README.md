@@ -71,3 +71,8 @@ PC1 and PC2 successfully communicated through the router.
 ## Packet Tracer File
 
 `01-router-basic-configuration.pkt`
+
+
+
+Configured static routing between two Cisco routers to enable communication between two different LAN networks. Verified connectivity using ping and traceroute.
+
